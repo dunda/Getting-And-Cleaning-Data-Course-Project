@@ -10,7 +10,7 @@ subject_train <- read.table("./train/subject_train.txt", header=F, col.names = "
 x_train <- read.table("./train/x_train.txt",header=F,col.names=features[,2])
 y_train <- read.table("./train/y_train.txt",header=F,col.names="activityId")
 
-## Merge Data Sets
+## Merge Datasets
 
 train <- cbind(y_train,subject_train,x_train[,xfeatures])
 
@@ -25,11 +25,11 @@ data <- rbind(train,test)
 fdata <- merge(activity_labels,data,by="activityId",all.x=T)
 fdata <- fdata[,names(fdata) != "activityId"]
 
-# need to clean up names here
+## names cleaned up here
 names(fdata) <- gsub('\\(|\\)',"",names(fdata), perl = TRUE)
-# Make syntactically valid names
+# syntactically valididate names
 names(fdata) <- make.names(names(fdata))
-# Make clearer names
+# clean up each activity name 
 names(fdata) <- gsub('Acc',"Acceleration",names(fdata))
 names(fdata) <- gsub('GyroJerk',"AngularAcceleration",names(fdata))
 names(fdata) <- gsub('Gyro',"AngularSpeed",names(fdata))
@@ -40,7 +40,7 @@ names(fdata) <- gsub('\\.mean',".Mean",names(fdata))
 names(fdata) <- gsub('\\.std',".StandardDeviation",names(fdata))
 names(fdata) <- gsub('Freq\\.',"Frequency.",names(fdata))
 names(fdata) <- gsub('Freq$',"Frequency",names(fdata))
-
+# melt data and create and second "tidy" dataset 
 mdata <- melt(fdata, id=c("subjectId", "activityType"))
 tidyMeans<-dcast(mdata, subjectId + activityType~variable, mean) 
 write.table(tidyMeans, "../tidyMeans.txt", row.names = F, sep="\t")
